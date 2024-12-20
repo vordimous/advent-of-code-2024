@@ -34,14 +34,14 @@ func parseInput() [][]int {
 	return parsed
 }
 
-func partOne(m [][]int) {
+func partOne(m [][]int) int {
 	results := make(chan bool, len(m))
-	for _, r := range m {
-		go func () {
+	go func() {
+		for _, r := range m {
 			safe := true
 			pos := (r[0] - r[1]) >= 0
-			for i, n := range r[:len(r) - 1] {
-				diff := n - r[i + 1]
+			for i, n := range r[:len(r)-1] {
+				diff := n - r[i+1]
 				distance := math.Abs(float64(diff))
 				if (diff >= 0) != pos || distance == 0 || distance > 3 {
 					safe = false
@@ -49,24 +49,24 @@ func partOne(m [][]int) {
 				}
 			}
 			results <- safe
-		}()
-	}
-	
+		}
+		close(results)
+	}()
+
 	total := 0
-	for range m {
-		safe := <- results
-		if safe {
+	for res := range results {
+		if res {
 			total += 1
 		}
 	}
-	fmt.Printf("part 1: %v\n", total)
+	return total
 }
 
 func removeIndex(s []int, i int) []int {
 	return append(s[:i], s[i+1:]...)
 }
 
-func partTwo(m [][]int) {
+func partTwo(m [][]int) int {
 	total := 0
 	for _, r := range m {
 		safe := true
@@ -120,12 +120,12 @@ func partTwo(m [][]int) {
 		}
 	}
 
-	fmt.Printf("part 2: %v\n", total)
+	return total
 }
 
 func main() {
 	fmt.Println("AoC day 2")
 	m := parseInput()
-	partOne(m)
-	partTwo(m)
+	fmt.Printf("part 1: %v\n", partOne(m))
+	fmt.Printf("part 2: %v\n", partTwo(m))
 }

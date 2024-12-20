@@ -34,7 +34,7 @@ func parseInput() ([]int, []int) {
 	return left, right
 }
 
-func partOne(left []int, right []int) {
+func partOne(left []int, right []int) float64 {
 	slices.Sort(left)
 	slices.Sort(right)
 	var distance float64
@@ -42,10 +42,10 @@ func partOne(left []int, right []int) {
 		sep := float64(left[i] - right[i])
 		distance += math.Abs(sep)
 	}
-	fmt.Printf("part 1: %.0f\n", distance)
+	return distance
 }
 
-func partTwo(left []int, right []int) {
+func partTwo(left []int, right []int) int {
 	counts := map[int]int{}
 	for _, v := range right {
 		counts[v] += 1
@@ -54,12 +54,12 @@ func partTwo(left []int, right []int) {
 	for _, v := range left {
 		total += (v * counts[v])
 	}
-	fmt.Printf("part 2: %d\n", total)
+	return total
 }
 
 func main() {
 	fmt.Println("AoC day 1")
 	left, right := parseInput()
-	partOne(left, right) 
-	partTwo(left, right)
+	fmt.Printf("part 1: %.0f\n", partOne(left, right))
+	fmt.Printf("part 2: %d\n", partTwo(left, right))
 }
