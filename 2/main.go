@@ -35,30 +35,23 @@ func parseInput() [][]int {
 }
 
 func partOne(m [][]int) int {
-	results := make(chan bool, len(m))
-	go func() {
-		for _, r := range m {
-			safe := true
-			pos := (r[0] - r[1]) >= 0
-			for i, n := range r[:len(r)-1] {
-				diff := n - r[i+1]
-				distance := math.Abs(float64(diff))
-				if (diff >= 0) != pos || distance == 0 || distance > 3 {
-					safe = false
-					break
-				}
-			}
-			results <- safe
-		}
-		close(results)
-	}()
-
 	total := 0
-	for res := range results {
-		if res {
+	for _, r := range m {
+		safe := true
+		pos := (r[0] - r[1]) >= 0
+		for i, n := range r[:len(r)-1] {
+			diff := n - r[i+1]
+			distance := math.Abs(float64(diff))
+			if (diff >= 0) != pos || distance == 0 || distance > 3 {
+				safe = false
+				break
+			}
+		}
+		if safe {
 			total += 1
 		}
 	}
+
 	return total
 }
 
