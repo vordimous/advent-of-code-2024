@@ -14,10 +14,10 @@ func check(e error) {
 	}
 }
 
-func parseInput() ([][]int) {
+func parseInput() [][]int {
 	dat, err := os.ReadFile("input.txt")
 	check(err)
-	
+
 	lines := strings.Split(strings.TrimSpace(string(dat)), "\n")
 	parsed := make([][]int, len(lines))
 	for i, l := range lines {
@@ -63,63 +63,63 @@ func partOne(m [][]int) {
 }
 
 func removeIndex(s []int, i int) []int {
-    return append(s[:i], s[i+1:]...)
+	return append(s[:i], s[i+1:]...)
 }
 
 func partTwo(m [][]int) {
 	total := 0
 	for _, r := range m {
-			safe := true
-			pos := (r[0] - r[1]) >= 0
-			for i, n := range r[:len(r) - 1] {
-				diff := n - r[i + 1]
+		safe := true
+		pos := (r[0] - r[1]) >= 0
+		for i, n := range r[:len(r)-1] {
+			diff := n - r[i+1]
+			distance := math.Abs(float64(diff))
+			if (diff >= 0) != pos || distance == 0 || distance > 3 {
+				safe = false
+				break
+			}
+		}
+		// check if initial report is safe
+		// and make all possible copies of a report with one level removed
+		stripped := make([][]int, len(r))
+		for i, n := range r {
+			//check
+			if i < len(r)-1 {
+				diff := n - r[i+1]
 				distance := math.Abs(float64(diff))
 				if (diff >= 0) != pos || distance == 0 || distance > 3 {
 					safe = false
-					break
 				}
 			}
-			// check if initial report is safe
-			// and make all possible copies of a report with one level removed
-			stripped := make([][]int, len(r))
-			for i, n := range r {
-				//check
-				if i < len(r) - 1 {
-					diff := n - r[i + 1]
+			// copy
+			stripped[i] = make([]int, len(r))
+			copy(stripped[i], r)
+			stripped[i] = removeIndex(stripped[i], i)
+		}
+		if !safe {
+			// searching for one good level means we are good
+			for _, s := range stripped {
+				safe = true
+				pos := (s[0] - s[len(s)-1]) >= 0
+				for i, n := range s[:len(s)-1] {
+					diff := n - s[i+1]
 					distance := math.Abs(float64(diff))
 					if (diff >= 0) != pos || distance == 0 || distance > 3 {
 						safe = false
-					}
-				}
-				// copy
-				stripped[i] = make([]int, len(r))
-				copy(stripped[i], r)
-				stripped[i] = removeIndex(stripped[i], i)
-			}
-			if !safe {
-				// searching for one good level means we are good
-				for _, s := range stripped {
-					safe = true
-					pos := (s[0] - s[len(s)-1]) >= 0
-					for i, n := range s[:len(s) - 1] {
-						diff := n - s[i + 1]
-						distance := math.Abs(float64(diff))
-						if (diff >= 0) != pos || distance == 0 || distance > 3 {
-							safe = false
-							break
-						}
-					}
-					if safe {
 						break
 					}
 				}
+				if safe {
+					break
+				}
 			}
+		}
 
-			if safe {
-				total += 1
-			}
+		if safe {
+			total += 1
+		}
 	}
-	
+
 	fmt.Printf("part 2: %v\n", total)
 }
 
