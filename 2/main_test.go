@@ -28,7 +28,11 @@ func Benchmark_partOne(b *testing.B) {
 	}
 	for _, tt := range tests {
 		b.Run(tt.name, func(b *testing.B) {
-			partOne(tt.args.m)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				partOne(tt.args.m)
+			}
 		})
 	}
 }
@@ -95,7 +99,11 @@ func Benchmark_partTwo(b *testing.B) {
 	}
 	for _, tt := range tests {
 		b.Run(tt.name, func(b *testing.B) {
-			partTwo(tt.args.m)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				partTwo(tt.args.m)
+			}
 		})
 	}
 }
