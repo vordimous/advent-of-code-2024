@@ -67,10 +67,8 @@ func removeIndex(s []int, i int) []int {
 }
 
 func partTwo(m [][]int) {
-	
-	results := make(chan bool, len(m))
+	total := 0
 	for _, r := range m {
-		go func () {
 			safe := true
 			pos := (r[0] - r[1]) >= 0
 			for i, n := range r[:len(r) - 1] {
@@ -116,17 +114,12 @@ func partTwo(m [][]int) {
 					}
 				}
 			}
-			results <- safe
-		}()
+
+			if safe {
+				total += 1
+			}
 	}
 	
-	total := 0
-	for range m {
-		safe := <- results
-		if safe {
-			total += 1
-		}
-	}
 	fmt.Printf("part 2: %v\n", total)
 }
 
