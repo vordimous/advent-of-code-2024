@@ -14,7 +14,6 @@ Agenda:
 * Your Questions (~15 min)
 
 
-
 The Bowling Game
 
 Task: Create code that can calculate the score for a complete bowling game for 1 player
